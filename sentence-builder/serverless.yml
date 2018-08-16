@@ -1,0 +1,70 @@
+service: sentence-builder
+
+plugins:
+  - serverless-step-functions
+  - serverless-pseudo-parameters
+
+custom:
+  deploymentBucket: ${env:SLS_DEPLOYMENT_BUCKET}
+
+provider:
+  deploymentBucket: ${self:custom.deploymentBucket}
+  name: aws
+  runtime: go1.x
+  region: #{AWS::Region}
+  environment:
+    STATE_MACHINE_ARN: arn:aws:states:#{AWS::Region}:#{AWS::AccountId}:stateMachine:SentenceBuilder
+  iamRoleStatements:
+    - Effect: Allow
+      Action: states:*
+      Resource: '*'
+
+package:
+  individually: true
+  exclude:
+    - node_modules
+
+functions:
+  begin-sentence-builder:
+    name: begin-sentence-builder
+    handler: bin/begin
+    memorySize: 128
+    timeout: 5
+    events:
+      - http:
+          path: begin
+          method: post
+    package:
+      include: bin/begin
+
+  subject:
+    name: sentence-builder-subject
+    handler: bin/stepfunction_subject
+    memorySize: 128
+    timeout: 5
+    package:
+      include: bin/stepfunction_subject
+  phrase:
+    name: sentence-builder-phrase
+    handler: bin/stepfunction_phrase
+    memorySize: 128
+    timeout: 5
+    package:
+      include: bin/stepfunction_phrase
+
+stepFunctions:
+  stateMachines:
+    SentenceBuilder:
+      name: SentenceBuilder
+      definition:
+        Comment: Sentence Builder steps
+        StartAt: subject
+        States:
+          subject:
+            Type: Task
+            Resource: 'arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:sentence-builder-subject'
+            Next: phrase
+          phrase:
+            Type: Task
+            Resource: 'arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:sentence-builder-phrase'
+            End: true

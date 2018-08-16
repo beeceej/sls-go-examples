@@ -1,0 +1,60 @@
+service: dynamo-stream-to-es
+
+plugins:
+  - serverless-pseudo-parameters
+
+custom:
+  ElasticSearchDomainARN: arn:aws:es:#{AWS::Region}:#{AWS::AcountID}:domain/puppiesdemo
+
+  DynamoTableARNs:
+    - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AcountID}:table/puppy_demo
+  DynamoStreamARNs:
+    - stream: arn:aws:dynamodb:#{AWS::Region}:#{AWS::AcountID}:table/puppy_demo/stream/2018-08-14T05:36:13.993
+
+  ElasticSearchUrl: ${env:ES_URL}
+
+provider:
+  deploymentBucket: 'beeceej-ops'
+  name: aws
+  runtime: go1.x
+  environment:
+    ELASTIC_SEARCH_URL: ${self:custom.ElasticSearchUrl}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - 'dynamodb:ListTables'
+        - 'dynamodb:DescribeTable'
+        - 'dynamodb:DescribeStream'
+        - 'dynamodb:ListStreams'
+        - 'dynamodb:GetShardIterator'
+        - 'dynamodb:BatchGetItem'
+        - 'dynamodb:GetItem'
+        - 'dynamodb:Query'
+        - 'dynamodb:Scan'
+        - 'dynamodb:DescribeReservedCapacity'
+        - 'dynamodb:DescribeReservedCapacityOfferings'
+        - 'dynamodb:GetRecords'
+      Resource: ${self:custom.DynamoTableARNs}
+    - Effect: Allow
+      Action:
+        - es:ESHttpPost
+        - es:ESHttpPut
+        - es:ESHttpDelete
+        - es:ESHttpGet
+      Resource:
+        - ${self:custom.ElasticSearchDomainARN}
+        - ${self:custom.ElasticSearchDomainARN}/*
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+
+functions:
+  dynamo-stream-to-es:
+    name: dynamo-stream-to-es
+    handler: bin/dynamo-stream-to-es
+    memorySize: 128
+    timeout: 60
+    events: ${self:custom.DynamoStreamARNs}

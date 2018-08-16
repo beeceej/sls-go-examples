@@ -1,0 +1,13 @@
+{
+  "name": "dynamo-stream-to-es",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless": "^1.30.0",
+    "serverless-pseudo-parameters": "^2.1.0"
+  }
+}
