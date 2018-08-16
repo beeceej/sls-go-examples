@@ -12,9 +12,9 @@ custom:
     - stream: arn:aws:dynamodb:#{AWS::Region}:#{AWS::AcountID}:table/puppy_demo/stream/2018-08-14T05:36:13.993
 
   ElasticSearchUrl: ${env:ES_URL}
-
+  deploymentBucket: ${env:SLS_DEPLOY_BUCKET}
 provider:
-  deploymentBucket: 'beeceej-ops'
+        deploymentBucket: ${self:custom.deploymentBucket}'
   name: aws
   runtime: go1.x
   environment:
