@@ -1,10 +1,6 @@
 service: dynamo-stream-to-es
 
-plugins:
-  - serverless-pseudo-parameters
-
 provider:
-  deploymentBucket: beeceej-ops
   name: aws
   runtime: go1.x
   environment:

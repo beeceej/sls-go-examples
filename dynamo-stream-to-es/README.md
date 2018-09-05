@@ -1,6 +1,19 @@
 # Dynamo Stream To ES
 
-To build for AWS Lambda (linux binaries):
+This serverless project acts as an example for:
+* Creating a Dynamo DB Table via Cloudformation
+* Creating a 1 node Elasticserach Cluster via Cloudformation
+* Creating a generic Go function which maps the keyspace from Dynamo DB to ElasticSearch
+
+to deploy the example you must first have npm installed on your system [https://nodejs.org/en/download/](https://nodejs.org/en/download/)
+
+cd into `sls-go-examples/dynamo-stream-to-es`
+
+run npm install which will install the serverless CLI. Once you have serverless on your machine you may run `./node_modules/serverless/bin/serverless deploy` This will deploy the serverless project to your AWS Account. This example will very likely take ~15min to deploy (because of elasticsearch), and in production the deployment of data stores (dynamodb, rds variants, elasticsearch) should probably not be tied to an application deployment.
+
+
+
+## To build for AWS Lambda (linux binaries):
 
 `$ make`
 
@@ -23,12 +36,3 @@ To deploy:
 make sure `cmd/seed-dynamo/main.go` refers to the table you've created, then run
 
 `$ go run cmd/seed-dynamo/main.go`
-
-## Environment Variables
-
-- ES_URL: the URL to your Elastic Search Cluster
-- SLS_DEPLOYMENT_BUCKET: The S3 bucket SLS will deploy to
-
-## Note
-
-You will need to edit line 10 and line 12 in serverless.yml to refer to your own dynamo table arns.

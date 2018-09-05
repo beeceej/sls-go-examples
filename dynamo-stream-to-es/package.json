@@ -8,6 +8,5 @@
   "license": "MIT",
   "devDependencies": {
     "serverless": "^1.30.3",
-    "serverless-pseudo-parameters": "^2.1.0"
   }
 }
