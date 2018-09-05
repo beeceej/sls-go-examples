@@ -10,7 +10,9 @@ to deploy the example you must first have npm installed on your system [https://
 
 cd into `sls-go-examples/dynamo-stream-to-es`
 
-run npm install which will install the serverless CLI. Once you have serverless on your machine you may run `./node_modules/serverless/bin/serverless deploy` This will deploy the serverless project to your AWS Account. This example will very likely take ~15min to deploy (because of elasticsearch), and in production the deployment of data stores (dynamodb, rds variants, elasticsearch) should probably not be tied to an application deployment.
+run npm install which will install the serverless CLI. Once you have serverless on your machine you may run `./node_modules/serverless/bin/serverless deploy` This will deploy the serverless project to your AWS Account. This example will very likely take ~15min to deploy (because of elasticsearch).
+
+In production the deployment of data stores (dynamodb, rds variants, elasticsearch) should probably not be tied to an application deployment.
 
 
 ## To build for AWS Lambda (linux binaries) and deploy:
