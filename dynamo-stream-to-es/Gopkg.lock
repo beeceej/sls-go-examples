@@ -52,6 +52,15 @@
   version = "v1.15.13"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/fnproject/fdk-go"
+  packages = [
+    ".",
+    "utils"
+  ]
+  revision = "1eb29530716f262bad5b83eb9a5b3f7483636949"
+
+[[projects]]
   name = "github.com/go-ini/ini"
   packages = ["."]
   revision = "358ee7663966325963d4e8b2e1fbd570c5195153"
@@ -98,6 +107,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d2cd47de37e312155bf6c3166b4f4de2fd5c092f67bc6133eb594bce8a77c675"
+  inputs-digest = "75c9958bbea9acbdea0a8c8276a4b998ae7c39bc81143deb8f887e078a036060"
   solver-name = "gps-cdcl"
   solver-version = 1

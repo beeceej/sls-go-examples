@@ -17,16 +17,16 @@ func init() {
 }
 
 type puppy struct {
-	ID             string `json:"id"`
-	Name           string `json:"name"`
-	Age            int    `json:"age"`
-	Weight         string `json:"weight"`
-	PrimaryColor   string `json:"primaryColor"`
-	SecondaryColor string `json:"secondaryColor"`
-	Owner          string `json:"owner"`
-	Location       string `json:"location"`
-	Motto          string `json:"motto"`
-	Breed          string `json:"breed"`
+	ID             string  `json:"id"`
+	Name           string  `json:"name"`
+	Age            float64 `json:"age"`
+	Weight         string  `json:"weight"`
+	PrimaryColor   string  `json:"primaryColor"`
+	SecondaryColor string  `json:"secondaryColor"`
+	Owner          string  `json:"owner"`
+	Location       string  `json:"location"`
+	Motto          string  `json:"motto"`
+	Breed          string  `json:"breed"`
 }
 
 func main() {
@@ -53,7 +53,7 @@ func main() {
 			Location:       locations[rand.Intn(locationMaxIndex)],
 			Weight:         fmt.Sprintf("%dlb", rand.Intn(maxWeight)+2),
 			Motto:          "Woof Woof!",
-			Age:            rand.Intn(maxAge),
+			Age:            float64(rand.Intn(maxAge)),
 			Breed:          breeds[rand.Intn(breedMaxIndex)],
 		}
 
@@ -65,7 +65,7 @@ func main() {
 		} else {
 			_, err := svc.PutItem(&dynamodb.PutItemInput{
 				Item:      avm,
-				TableName: aws.String("puppy_demo"),
+				TableName: aws.String("puppies"),
 			})
 			if err != nil {
 				fmt.Println(err.Error())

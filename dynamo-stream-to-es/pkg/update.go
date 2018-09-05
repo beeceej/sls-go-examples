@@ -20,7 +20,11 @@ type Elasticsearch struct {
 func (e *Elasticsearch) Update(d *Details, item map[string]events.DynamoDBAttributeValue) (*es.IndexResponse, error) {
 	tmp := eventStreamToMap(item)
 	var i interface{}
-	_ = dynamodbattribute.UnmarshalMap(tmp, &i)
+	err := dynamodbattribute.UnmarshalMap(tmp, &i)
+	if err != nil {
+		return nil, err
+	}
+
 	resp, err := e.Index().
 		Id(docID(d, item)).
 		Type(docType(d)).
@@ -45,12 +49,13 @@ func docType(d *Details) (t string) {
 }
 
 func docID(d *Details, item map[string]events.DynamoDBAttributeValue) (id string) {
-	if d.RangeKey != "" {
-		id = fmt.Sprintf("%s-%s", item[d.HashKey].String(), item[d.RangeKey].String())
-	} else {
-		id = item[d.HashKey].String()
+	if d != nil {
+		if d.RangeKey != "" {
+			id = fmt.Sprintf("%s-%s", item[d.HashKey].String(), item[d.RangeKey].String())
+		} else {
+			id = item[d.HashKey].String()
+		}
 	}
-
 	return id
 }
 
@@ -89,6 +94,11 @@ func eventStreamToMap(attribute interface{}) map[string]*dynamodb.AttributeValue
 		case events.DataTypeMap:
 			m[k] = &dynamodb.AttributeValue{
 				M: eventStreamToMap(v),
+			}
+		case events.DataTypeNumber:
+			n := v.Number()
+			m[k] = &dynamodb.AttributeValue{
+				N: &n,
 			}
 		}
 	}

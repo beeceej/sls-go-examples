@@ -31,11 +31,13 @@ func handler(e events.DynamoDBEvent) error {
 			details, err := (&dstream.DynamoDetails{
 				DynamoDBAPI: dynamoSvc,
 			}).Get(tableName)
-
+			if err != nil {
+				return err
+			}
 			esclient := new(dstream.Elasticsearch)
 			svc, err := elastic.NewClient(
 				elastic.SetSniff(false),
-				elastic.SetURL(os.Getenv("ELASTIC_SEARCH_URL")),
+				elastic.SetURL(fmt.Sprintf("https://%s", os.Getenv("ELASTIC_SEARCH_URL"))),
 			)
 			if err != nil {
 				return err
